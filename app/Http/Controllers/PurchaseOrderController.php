@@ -253,18 +253,24 @@ class PurchaseOrderController extends Controller
         // --- 1. & 2. VALIDASI DATA (Header & Items) ---
         // Gabungkan validasi agar pesan error muncul sekaligus untuk Header dan Item
         
+        return $request->all();
+
         // Aturan Validasi
         $rules = [
             // Header
-            'vendor_id'             => 'required|exists:vendors,id',
-            'pr_id'                 => 'nullable|exists:purchase_requests,id',
-            'currency'              => 'required|string|in:IDR,USD,EUR',
             'po_date'               => 'required|date',
+            'vendor_id'             => 'required|exists:vendors,id',
             'required_delivery_date'=> 'nullable|date|after_or_equal:po_date',
             'terms_of_payment'      => 'nullable|string|max:50',
             'shipping_address'      => 'nullable|string',
+            'currency'              => 'required|string|in:IDR,USD,EUR',
+            // 'pr_id'                 => 'nullable|exists:purchase_requests,id',
+            'shipping_cost'         => 'nullable|numeric|min:0',
+            'discount_amount'       => 'required|numeric|min:0',
             'tax_amount'            => 'required|numeric|min:0',
-            'subtotal'              => 'required|numeric|min:0',
+            // 'subtotal'              => 'required|numeric|min:0',
+            'notes'                 => 'nullable|string',
+            
             'total_amount'          => 'required|numeric|min:0', // Hapus gte:subtotal sementara jika tax bisa negatif/diskon, atau biarkan jika standar
             'items'                 => 'required|array|min:1',
             
